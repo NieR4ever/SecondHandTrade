@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.UserAddressDao">
+    <insert id="saveUserAddress" parameterType="com.example.sht.domain.UserAddress">
+        insert into
+        sht_user_address(
+        user_id,
+        address,
+        default_sign
+        )
+        values(
+        #{userId},
+        #{address},
+        #{defaultSign}
+        )
+    </insert>
+    <update id="updateUserAddress" parameterType="com.example.sht.domain.UserAddress">
+        update
+        sht_user_address
+        <set>
+            <if test="userId!=null and userId!=''">
+                user_id=#{userId}
+            </if>
+            <if test="address!=null and address!=''">
+                ,address=#{address}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteUserAddress">
+        delete
+        from sht_user_address
+        where id = #{id}
+    </delete>
+    <select id="findByUserId" resultType="com.example.sht.domain.UserAddress">
+        select *
+        from sht_user_address
+        where user_id = #{userId}
+    </select>
+    <select id="findById" resultType="com.example.sht.domain.UserAddress">
+        select *
+        from sht_user_address
+        where id = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.sht.domain.UserAddress">
+        select * from sht_user_address
+    </select>
+</mapper>

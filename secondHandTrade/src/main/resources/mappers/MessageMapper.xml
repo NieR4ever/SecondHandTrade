@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.MessageDao">
+    <insert id="saveMessage" parameterType="com.example.sht.domain.Message">
+        insert into
+        sht_message(
+        user_src_id,
+        user_dst_id
+        <if test="content!=null and content!=''">
+            ,content
+        </if>
+        <if test="pictureUrl!=null and pictureUrl!=''">
+            ,picture_url
+        </if>
+        )
+        values(
+        #{srcUser.id},
+        #{dstUser.id}
+        <if test="content!=null and content!=''">
+            ,#{content}
+        </if>
+        <if test="pictureUrl!=null and pictureUrl!=''">
+            ,#{picture_url}
+        </if>
+        )
+    </insert>
+    <update id="updateMessage" parameterType="com.example.sht.domain.Message">
+        update
+        sht_message
+        <set>
+            <if test="srcUser.id!=null and srcUser.id!=''">
+                user_src_id=#{srcUser.id}
+            </if>
+            <if test="dstUser.id!=null and dstUser.id!=''">
+                ,user_dst_id=#{dstUser.id}
+            </if>
+            <if test="content!=null and content!=''">
+                ,content=#{content}
+            </if>
+            <if test="pictureUrl!=null and pictureUrl!=''">
+                ,picture_url=#{pictureUrl}
+            </if>
+            <if test="read!=null and read!=''">
+                ,read=#{read}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteMessage">
+        delete
+        from sht_message
+        where id = #{id}
+    </delete>
+    <resultMap id="messageInfo" type="com.example.sht.domain.Message">
+        <id property="id" column="id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="content" column="content"/>
+        <result property="pictureUrl" column="picture_url"/>
+        <result property="read" column="read"/>
+        <association property="srcUser" javaType="com.example.sht.domain.User"
+                     select="com.example.sht.dao.UserDao.findById" column="user_src_id"/>
+        <association property="dstUser" javaType="com.example.sht.domain.User"
+                     select="com.example.sht.dao.UserDao.findById" column="user_dst_id"/>
+    </resultMap>
+    <select id="findById" resultMap="messageInfo">
+        select *
+        from sht_message
+        where id = #{id}
+    </select>
+    <select id="findAll" resultMap="messageInfo">
+        select * from sht_message
+    </select>
+    <select id="findByUserId" resultMap="messageInfo">
+        select *
+        from sht_message
+        where user_src_id = #{userId} and user_dst_id = #{dstUserId}
+            or user_src_id = #{dstUserId} and user_dst_id = #{userId}
+    </select>
+    <select id="findMessageUserListByUserId" resultMap="messageInfo">
+        select distinct user_src_id,user_dst_id
+        from sht_message
+        where user_src_id=#{userId} or user_dst_id=#{userId}
+    </select>
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.PostDao">
+
+    <insert id="savePost" parameterType="com.example.sht.domain.Post">
+        insert into
+        sht_post(
+        user_id,
+        title,
+        content,
+        cover_picture_url,
+        price,
+        post_category,
+        keywords,
+        amount,
+        name
+        <if test="category.id!=null and category.id!=''">
+            ,category_id
+        </if>
+        <if test="quality.id!=null and quality.id!=''">
+            ,quality_id
+        </if>
+        )
+        values(
+        #{user.id},
+        #{title},
+        #{content},
+        #{coverPictureUrl},
+        #{price},
+        #{postCategory},
+        #{keywords},
+        #{amount},
+        #{name}
+        <if test="category.id!=null and category.id!=''">
+            ,#{category.id}
+        </if>
+        <if test="quality.id!=null and quality.id!=''">
+            ,#{quality.id}
+        </if>
+        )
+    </insert>
+    <update id="updatePost" parameterType="com.example.sht.domain.Post">
+        update
+        sht_post
+        <set>
+            <if test="user.id!=null and user.id!=''">
+                user_id=#{user.id}
+            </if>
+            <if test="title!=null and title!=''">
+                ,title=#{title}
+            </if>
+            <if test="content!=null and content!=''">
+                ,content=#{content}
+            </if>
+            <if test="scanCount!=null and scanCount!=''">
+                ,scan_count=#{scanCount}
+            </if>
+            <if test="sold!=null and sold!=''">
+                ,sold=#{sold}
+            </if>
+            <if test="coverPictureUrl!=null and coverPictureUrl!=''">
+                ,cover_picture_url=#{covePictureUrl}
+            </if>
+            <if test="price!=null and price!=''">
+                ,price=#{price}
+            </if>
+            <if test="category.id!=null and category.id!=''">
+                ,category_id=#{category.id}
+            </if>
+            <if test="quality.id!=null and quality.id!=''">
+                ,quality_id=#{quality.id}
+            </if>
+            <if test="postCategory!=null and postCategory!=''">
+                ,post_category=#{postCategory}
+            </if>
+            <if test="keywords!=null and keywords!=''">
+                ,keywords=#{keywords}
+            </if>
+            <if test="keywords!=null and keywords!=''">
+                ,keywords=#{keywords}
+            </if>
+            <if test="amount!=null and amount!=''">
+                ,amount=#{amount}
+            </if>
+            <if test="name!=null and name!=''">
+                ,name=#{name}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deletePost">
+        delete
+        from sht_post
+        where id = #{id}
+    </delete>
+    <resultMap id="postInfo" type="com.example.sht.domain.Post">
+        <id property="id" column="id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="scanCount" column="scan_count"/>
+        <result property="sold" column="sold"/>
+        <result property="coverPictureUrl" column="cover_picture_url"/>
+        <result property="price" column="price"/>
+        <result property="postCategory" column="post_category"/>
+        <result property="keywords" column="keywords"/>
+        <result property="amount" column="amount"/>
+        <result property="name" column="name"/>
+        <association property="user" javaType="com.example.sht.domain.User"
+                     select="com.example.sht.dao.UserDao.findById" column="user_id"/>
+        <association property="category" javaType="com.example.sht.domain.Category"
+                     select="com.example.sht.dao.CategoryDao.findById" column="category_id"/>
+        <association property="quality" javaType="com.example.sht.domain.Quality"
+                     select="com.example.sht.dao.QualityDao.findById" column="quality_id"/>
+    </resultMap>
+    <select id="findById" resultMap="postInfo">
+        select *
+        from sht_post
+        where id = #{id}
+    </select>
+    <select id="findByUserId" resultMap="postInfo">
+        select *
+        from sht_post
+        where user_id = #{userId}
+        order by create_date desc
+    </select>
+    <select id="findAll" resultMap="postInfo">
+        select * from sht_post
+    </select>
+    <select id="findAllByPostCategory" resultMap="postInfo">
+        select * from sht_post where post_category=#{postCategory}
+    </select>
+    <select id="findByKeyword" resultMap="postInfo">
+        select * from sht_post where keywords like concat('%',#{keyword},'%') and post_category=#{postCategory}
+    </select>
+    <select id="findByName" resultType="com.example.sht.domain.Post">
+        select * from sht_post where name like concat('%',#{name},'%') and post_category=#{postCategory}
+    </select>
+</mapper>

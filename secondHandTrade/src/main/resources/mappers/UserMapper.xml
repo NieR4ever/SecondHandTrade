@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.UserDao">
+    <insert id="saveUser" parameterType="com.example.sht.domain.User" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into
+        sht_user(
+        name,
+        password
+        <if test="phone!=null and phone!=''">
+            ,phone
+        </if>
+        <if test="email!=null and email!=''">
+            ,email
+        </if>
+        <if test="description!=null and description!=''">
+            ,description
+        </if>
+        <if test="avatarUrl!=null and avatarUrl!=''">
+            ,avatar_url
+        </if>
+        <if test="gender!=null and gender!=''">
+            ,gender
+        </if>
+        )
+        values(
+        #{name},
+        #{password}
+        <if test="phone!=null and phone!=''">
+            ,#{phone}
+        </if>
+        <if test="email!=null and email!=''">
+            ,#{email}
+        </if>
+        <if test="description!=null and description!=''">
+            ,#{description}
+        </if>
+        <if test="avatarUrl!=null and avatarUrl!=''">
+            ,#{avatarUrl}
+        </if>
+        <if test="gender!=null and gender!=''">
+            ,#{gender}
+        </if>
+        )
+    </insert>
+    <update id="updateUser" parameterType="com.example.sht.domain.User">
+        update
+        sht_user
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name}
+            </if>
+            <if test="password!=null and password!=''">
+                ,password=#{password}
+            </if>
+            <if test="phone!=null and phone!=''">
+                ,phone=#{phone}
+            </if>
+            <if test="email!=null and email!=''">
+                ,email=#{email}
+            </if>
+            <if test="description!=null and description!=''">
+                ,description=#{description}
+            </if>
+            <if test="avatarUrl!=null and avatarUrl!=''">
+                ,avatar_url=#{avatarUrl}
+            </if>
+            <if test="gender!=null and gender!=''">
+                ,gender=#{gender}
+            </if>
+            <if test="likeCount!=null and likeCount!=''">
+                ,like_count=#{likeCount}
+            </if>
+            <if test="collectedCount!=null and collectedCount!=''">
+                ,collected_count=#{collectedCount}
+            </if>
+            <if test="followCount!=null and followCount!=''">
+                ,follow_count=#{followCount}
+            </if>
+            <if test="followedCount!=null and followedCount!=''">
+                ,followed_count=#{followedCount}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteUser">
+        delete
+        from sht_user
+        where id = #{id}
+    </delete>
+    <resultMap id="userInfo" type="com.example.sht.domain.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="description" column="description"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="collectedCount" column="collected_count"/>
+        <result property="followCount" column="follow_count"/>
+        <result property="followedCount" column="followed_count"/>
+        <collection property="userAddressList" ofType="com.example.sht.domain.UserAddress"
+                    select="com.example.sht.dao.UserAddressDao.findById" column="id">
+            <id property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="address" column="address"/>
+            <result property="defaultSign" column="default_sign"/>
+        </collection>
+    </resultMap>
+    <select id="findById" resultMap="userInfo">
+        select *
+        from sht_user
+        where id = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.sht.domain.User">
+        select * from sht_user
+    </select>
+    <select id="findUserForLogin" parameterType="com.example.sht.domain.User" resultType="com.example.sht.domain.User">
+        select *
+        from sht_user
+        where name=#{name} and password=#{password}
+    </select>
+    <select id="findByName" resultType="com.example.sht.domain.User">
+        select *
+        from sht_user
+        where name=#{name}
+    </select>
+</mapper>

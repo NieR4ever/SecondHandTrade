@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.QualityDao">
+    <insert id="saveQuality" parameterType="com.example.sht.domain.Quality">
+        insert into
+        sht_quality(
+            quality
+        )
+        values(
+            #{quality}
+        )
+    </insert>
+    <update id="updateQuality" parameterType="com.example.sht.domain.Quality">
+        update
+        sht_quality
+        <set>
+            quality = #{quality}
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteQuality">
+        delete
+        from sht_quality
+        where id = #{id}
+    </delete>
+    <select id="findById" resultType="com.example.sht.domain.Quality">
+        select *
+        from sht_quality
+        where id = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.sht.domain.Quality">
+        select * from sht_quality
+    </select>
+    <select id="findByName" resultType="com.example.sht.domain.Quality">
+        select * from sht_quality where quality like concat('%',#{quality},'%')
+    </select>
+</mapper>

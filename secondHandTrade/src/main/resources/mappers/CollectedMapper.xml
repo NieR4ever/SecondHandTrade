@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.CollectedDao">
+    <insert id="saveCollected" parameterType="com.example.sht.domain.Collected">
+        insert into
+        sht_collected(
+        user_id,
+        post_id
+        )
+        values(
+        #{user.id},
+        #{post.id}
+        )
+    </insert>
+    <update id="updateCollected" parameterType="com.example.sht.domain.Collected">
+        update
+        sht_collected
+        <set>
+            <if test="user.id!=null and user.id!=''">
+                user_id=#{user.id}
+            </if>
+            <if test="post.id!=null and post.id!=''">
+                ,post_id=#{post.id}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteCollected">
+        delete
+        from sht_collected
+        where id = #{id}
+    </delete>
+    <resultMap id="collectedInfo" type="com.example.sht.domain.Collected">
+        <id property="id" column="id"/>
+        <result property="createDate" column="create_date"/>
+        <association property="user" javaType="com.example.sht.domain.User" select="com.example.sht.dao.UserDao.findById" column="user_id"/>
+        <association property="post" javaType="com.example.sht.domain.Post" select="com.example.sht.dao.PostDao.findById" column="user_id"/>
+    </resultMap>
+    <select id="findById" resultMap="collectedInfo">
+        select *
+        from sht_collected
+        where id = #{id}
+    </select>
+    <select id="findByUserId" resultMap="collectedInfo">
+        select *
+        from sht_collected
+        where user_id = #{userId}
+    </select>
+    <select id="findAll" resultMap="collectedInfo">
+        select * from sht_collected
+    </select>
+</mapper>

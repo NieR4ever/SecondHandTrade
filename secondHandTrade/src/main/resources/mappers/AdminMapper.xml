@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sht.dao.AdminDao">
+    <insert id="saveAdmin" parameterType="com.example.sht.domain.Admin">
+        insert into
+        sht_admin(
+        name,
+        password
+        )
+        values(
+        #{name},
+        #{password}
+        )
+    </insert>
+    <update id="updateAdmin" parameterType="com.example.sht.domain.Admin">
+        update
+        sht_admin
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name}
+            </if>
+            <if test="password!=null and password!=''">
+                ,password=#{password}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteAdmin">
+        delete
+        from sht_admin
+        where id = #{id}
+    </delete>
+    <select id="findById" resultType="com.example.sht.domain.Admin">
+        select *
+        from sht_admin
+        where id = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.sht.domain.Admin">
+        select * from sht_admin
+    </select>
+</mapper>

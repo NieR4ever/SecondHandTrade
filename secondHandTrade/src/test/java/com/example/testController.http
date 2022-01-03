@@ -1,0 +1,16 @@
+POST http://localhost:8081/upload/avatar
+Accept: application/json
+
+###
+GET http://localhost:8081/post
+Accept: application/json
+
+###
+GET http://localhost:8081/user/28
+Accept: application/json
+
+###
+GET http://localhost:8081/user/showUsers
+Accept: application/json
+
+###
